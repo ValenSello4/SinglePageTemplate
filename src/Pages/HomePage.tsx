@@ -10,11 +10,11 @@ const products = [
 ];
 
 const categories = ["Todos", "Vestidos", "Sacos", "Pantalones", "Tops", "Faldas"];
-
 const navLinks = ["Inicio", "Colección", "Nosotras", "Contacto"];
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("Todos");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const filtered = activeCategory === "Todos"
     ? products
@@ -22,6 +22,7 @@ export default function HomePage() {
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
   };
 
   return (
@@ -47,6 +48,10 @@ export default function HomePage() {
           0%,100% { transform: translateY(0px); }
           50%      { transform: translateY(-10px); }
         }
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
 
         .fade-up   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
         .fade-in   { animation: fadeIn 1.2s ease both; }
@@ -70,9 +75,7 @@ export default function HomePage() {
           box-shadow: 0 20px 60px rgba(0,0,0,0.6);
           border-color: #b89a6a !important;
         }
-        .card-hover:hover .card-img-overlay {
-          opacity: 1 !important;
-        }
+        .card-hover:hover .card-img-overlay { opacity: 1 !important; }
         .card-hover:hover .card-tag-inner {
           background: #b89a6a !important;
           color: #0a0a0a !important;
@@ -121,6 +124,7 @@ export default function HomePage() {
           cursor: pointer;
           transition: all 0.3s ease;
           font-family: 'Didact Gothic', sans-serif;
+          white-space: nowrap;
         }
         .filter-btn:hover, .filter-btn.active {
           border-color: #b89a6a;
@@ -134,6 +138,119 @@ export default function HomePage() {
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
 
         section { width: 100%; }
+
+        /* ── MOBILE MENU ── */
+        .mobile-menu {
+          display: none;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(10,10,10,0.98);
+          z-index: 99;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2.5rem;
+          animation: slideDown 0.3s ease;
+        }
+        .mobile-menu.open { display: flex; }
+
+        .hamburger {
+          display: none;
+          flex-direction: column;
+          gap: 5px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          z-index: 101;
+        }
+        .hamburger span {
+          display: block;
+          width: 22px;
+          height: 1px;
+          background: #e8e0d5;
+          transition: all 0.3s ease;
+        }
+        .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+        /* ── FILTERS SCROLL ── */
+        .filters-scroll {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+          flex-wrap: wrap;
+          margin-bottom: 3.5rem;
+        }
+
+        /* ── NOSOTRAS DECORATIVE ── */
+        .nosotras-deco {
+          flex: 1 1 300px;
+          position: relative;
+          min-height: 400px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+
+          /* Nav */
+          .nav-desktop-links { display: none !important; }
+          .nav-instagram { display: none !important; }
+          .hamburger { display: flex !important; }
+
+          /* Hero */
+          .hero-section {
+            padding: 7rem 6% 5rem !important;
+            min-height: 100svh !important;
+            align-items: flex-start !important;
+          }
+          .hero-float-badge { display: none !important; }
+          .hero-deco-line { display: none !important; }
+          .hero-buttons { flex-direction: column !important; }
+          .hero-buttons .btn-primary { width: 100%; text-align: center; }
+
+          /* Catálogo */
+          .catalogo-section { padding: 5rem 4% 4rem !important; }
+          .filters-scroll {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            justify-content: flex-start !important;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .filters-scroll::-webkit-scrollbar { display: none; }
+          .product-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1rem !important;
+          }
+          .product-card-img { height: 200px !important; }
+
+          /* Nosotras */
+          .nosotras-section {
+            padding: 5rem 6% !important;
+            flex-direction: column !important;
+            gap: 3rem !important;
+          }
+          .nosotras-deco { min-height: 280px !important; flex: unset !important; width: 100% !important; }
+          .nosotras-deco > div:nth-child(1) { width: 180px !important; height: 240px !important; }
+          .nosotras-deco > div:nth-child(2) { top: 30px !important; left: 30px !important; width: 180px !important; height: 240px !important; }
+
+          /* Contacto */
+          .contacto-section { padding: 5rem 6% !important; }
+          .contacto-cards { gap: 1rem !important; }
+          .contacto-card { min-width: unset !important; width: 100% !important; padding: 1.5rem !important; }
+
+          /* Footer */
+          .footer { flex-direction: column !important; text-align: center !important; gap: 0.5rem !important; }
+        }
+
+        @media (max-width: 480px) {
+          .product-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       {/* ── NAV ── */}
@@ -148,7 +265,9 @@ export default function HomePage() {
         <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "1.3rem", letterSpacing: "0.2em", color: "#e8e0d5" }}>
           AURA
         </span>
-        <div style={{ display: "flex", gap: "2.5rem" }}>
+
+        {/* Desktop links */}
+        <div className="nav-desktop-links" style={{ display: "flex", gap: "2.5rem" }}>
           {["inicio", "coleccion", "nosotras", "contacto"].map((id, i) => (
             <button key={id} onClick={() => scrollTo(id)}
               className="nav-link"
@@ -157,28 +276,47 @@ export default function HomePage() {
             </button>
           ))}
         </div>
-        <a href="https://instagram.com" style={{ fontSize: "0.7rem", letterSpacing: "0.18em", color: "#444", textDecoration: "none", transition: "color 0.3s" }}
+
+        <a className="nav-instagram" href="https://instagram.com" style={{ fontSize: "0.7rem", letterSpacing: "0.18em", color: "#444", textDecoration: "none", transition: "color 0.3s" }}
           onMouseEnter={e => (e.currentTarget.style.color = "#b89a6a")}
           onMouseLeave={e => (e.currentTarget.style.color = "#444")}>
           ✦ @auracomplementos
         </a>
+
+        {/* Hamburger */}
+        <button className={`hamburger ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menú">
+          <span /><span /><span />
+        </button>
       </nav>
 
-      {/* ── HERO ── */}
-      <section id="inicio" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: "0 5%" }}>
-        {/* bg texture */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 50%, #1a1208 0%, #0a0a0a 60%)" }} />
-        {/* decorative lines */}
-        <div style={{ position: "absolute", top: "15%", right: "8%", width: "1px", height: "40vh", background: "linear-gradient(to bottom, transparent, #b89a6a40, transparent)" }} />
-        <div style={{ position: "absolute", bottom: "15%", left: "5%", width: "80px", height: "1px", background: "#b89a6a40" }} />
+      {/* ── MOBILE MENU ── */}
+      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        {["inicio", "coleccion", "nosotras", "contacto"].map((id, i) => (
+          <button key={id} onClick={() => scrollTo(id)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#888", fontSize: "1rem", letterSpacing: "0.3em", textTransform: "uppercase", fontFamily: "'Didact Gothic', sans-serif", transition: "color 0.3s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#b89a6a")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#888")}>
+            {navLinks[i]}
+          </button>
+        ))}
+        <a href="https://instagram.com" style={{ fontSize: "0.7rem", letterSpacing: "0.2em", color: "#444", textDecoration: "none", marginTop: "1rem" }}>
+          ✦ @auracomplementos
+        </a>
+      </div>
 
-        <div style={{ position: "relative", zIndex: 1, maxWidth: "700px" }}>
+      {/* ── HERO ── */}
+      <section id="inicio" className="hero-section" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: "0 5%" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 50%, #1a1208 0%, #0a0a0a 60%)" }} />
+        <div className="hero-deco-line" style={{ position: "absolute", top: "15%", right: "8%", width: "1px", height: "40vh", background: "linear-gradient(to bottom, transparent, #b89a6a40, transparent)" }} />
+        <div className="hero-deco-line" style={{ position: "absolute", bottom: "15%", left: "5%", width: "80px", height: "1px", background: "#b89a6a40" }} />
+
+        <div style={{ position: "relative", zIndex: 1, maxWidth: "700px", width: "100%" }}>
           <p className="fade-up d1" style={{ fontSize: "0.7rem", letterSpacing: "0.4em", color: "#b89a6a", textTransform: "uppercase", marginBottom: "1.5rem" }}>
             Nueva colección · 2025
           </p>
           <h1 className="fade-up d2" style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "clamp(3.5rem, 7vw, 6.5rem)",
+            fontSize: "clamp(3rem, 12vw, 6.5rem)",
             fontWeight: 400, lineHeight: 1.05,
             color: "#e8e0d5", marginBottom: "0.3rem",
           }}>
@@ -186,7 +324,7 @@ export default function HomePage() {
           </h1>
           <h1 className="fade-up d3" style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "clamp(3.5rem, 7vw, 6.5rem)",
+            fontSize: "clamp(3rem, 12vw, 6.5rem)",
             fontWeight: 700, fontStyle: "italic",
             lineHeight: 1.05, color: "#b89a6a",
             marginBottom: "2rem",
@@ -200,7 +338,7 @@ export default function HomePage() {
             Ropa diseñada para mujeres que eligen con intención. Piezas que duran, que se sienten, que se recuerdan.
           </p>
 
-          <div className="fade-up d5" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div className="fade-up d5 hero-buttons" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <button className="btn-primary" onClick={() => scrollTo("coleccion")}>Ver colección</button>
             <button className="btn-primary" style={{ borderColor: "#222", color: "#555" }} onClick={() => scrollTo("nosotras")}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "#1a1a1a"; (e.currentTarget as HTMLButtonElement).style.color = "#e8e0d5"; }}
@@ -210,8 +348,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Floating badge */}
-        <div className="float" style={{
+        <div className="float hero-float-badge" style={{
           position: "absolute", right: "10%", top: "50%", transform: "translateY(-50%)",
           width: "160px", height: "160px", borderRadius: "50%",
           border: "1px solid #b89a6a30",
@@ -222,7 +359,6 @@ export default function HomePage() {
           <span style={{ fontSize: "0.55rem", letterSpacing: "0.25em", color: "#555", textTransform: "uppercase", marginTop: "0.5rem" }}>Hecho con amor</span>
         </div>
 
-        {/* scroll hint */}
         <div style={{ position: "absolute", bottom: "3rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
           <span style={{ fontSize: "0.6rem", letterSpacing: "0.3em", color: "#333", textTransform: "uppercase" }}>Scroll</span>
           <div style={{ width: "1px", height: "40px", background: "linear-gradient(to bottom, #b89a6a, transparent)" }} />
@@ -230,7 +366,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CATÁLOGO ── */}
-      <section id="coleccion" style={{ padding: "8rem 5% 6rem", background: "#0d0d0d" }}>
+      <section id="coleccion" className="catalogo-section" style={{ padding: "8rem 5% 6rem", background: "#0d0d0d" }}>
         <div style={{ textAlign: "center", marginBottom: "4rem" }}>
           <p style={{ fontSize: "0.65rem", letterSpacing: "0.4em", color: "#b89a6a", textTransform: "uppercase", marginBottom: "1rem" }}>Temporada 2025</p>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 400, color: "#e8e0d5", marginBottom: "1.5rem" }}>
@@ -239,8 +375,8 @@ export default function HomePage() {
           <div style={{ width: "60px", height: "1px", background: "#b89a6a", margin: "0 auto" }} />
         </div>
 
-        {/* Filters */}
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "3.5rem" }}>
+        {/* Filters — scrollable on mobile */}
+        <div className="filters-scroll">
           {categories.map(cat => (
             <button key={cat}
               className={`filter-btn ${activeCategory === cat ? "active" : ""}`}
@@ -251,12 +387,11 @@ export default function HomePage() {
         </div>
 
         {/* Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
+        <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
           {filtered.map((product) => (
             <div key={product.id} className="card-hover"
               style={{ background: "#111", border: "1px solid #1a1a1a", cursor: "pointer", position: "relative", overflow: "hidden" }}>
-              {/* Image area */}
-              <div style={{ height: "300px", background: `linear-gradient(135deg, #141414 0%, #1c1812 100%)`, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div className="product-card-img" style={{ height: "300px", background: `linear-gradient(135deg, #141414 0%, #1c1812 100%)`, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "5rem", color: "#1e1e1e", userSelect: "none" }}>✦</span>
                 <div className="card-img-overlay" style={{ position: "absolute", inset: 0, background: "rgba(184,154,106,0.06)", opacity: 0, transition: "opacity 0.4s ease" }} />
                 {product.tag && (
@@ -265,13 +400,12 @@ export default function HomePage() {
                   </div>
                 )}
               </div>
-              {/* Info */}
-              <div style={{ padding: "1.5rem" }}>
+              <div style={{ padding: "1.2rem" }}>
                 <p style={{ fontSize: "0.6rem", letterSpacing: "0.2em", color: "#555", textTransform: "uppercase", marginBottom: "0.4rem" }}>{product.category}</p>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "1.2rem", fontWeight: 400, color: "#e8e0d5", marginBottom: "0.5rem" }}>{product.name}</h3>
-                <p style={{ fontSize: "0.8rem", color: "#555", lineHeight: 1.7, marginBottom: "1.2rem" }}>{product.description}</p>
+                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "1.1rem", fontWeight: 400, color: "#e8e0d5", marginBottom: "0.5rem" }}>{product.name}</h3>
+                <p style={{ fontSize: "0.78rem", color: "#555", lineHeight: 1.7, marginBottom: "1rem" }}>{product.description}</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #1a1a1a", paddingTop: "1rem" }}>
-                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", color: "#b89a6a", fontWeight: 400 }}>{product.price}</span>
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#b89a6a", fontWeight: 400 }}>{product.price}</span>
                   <button className="btn-primary" style={{ padding: "0.4rem 1rem", fontSize: "0.6rem" }}>Ver más</button>
                 </div>
               </div>
@@ -281,9 +415,8 @@ export default function HomePage() {
       </section>
 
       {/* ── SOBRE NOSOTRAS ── */}
-      <section id="nosotras" style={{ padding: "8rem 5%", background: "#0a0a0a", display: "flex", alignItems: "center", gap: "6rem", flexWrap: "wrap" }}>
-        {/* Left: decorative */}
-        <div style={{ flex: "1 1 300px", position: "relative", minHeight: "400px" }}>
+      <section id="nosotras" className="nosotras-section" style={{ padding: "8rem 5%", background: "#0a0a0a", display: "flex", alignItems: "center", gap: "6rem", flexWrap: "wrap" }}>
+        <div className="nosotras-deco" style={{ flex: "1 1 300px", position: "relative", minHeight: "400px" }}>
           <div style={{ position: "absolute", top: 0, left: 0, width: "240px", height: "320px", border: "1px solid #1a1a1a", background: "#0d0d0d" }} />
           <div style={{ position: "absolute", top: "40px", left: "40px", width: "240px", height: "320px", border: "1px solid #b89a6a30", background: "linear-gradient(135deg, #111 0%, #1a1208 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "6rem", color: "#1e1e18", fontStyle: "italic" }}>A</span>
@@ -294,8 +427,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Right: text */}
-        <div style={{ flex: "1 1 380px" }}>
+        <div style={{ flex: "1 1 300px" }}>
           <p style={{ fontSize: "0.65rem", letterSpacing: "0.4em", color: "#b89a6a", textTransform: "uppercase", marginBottom: "1.2rem" }}>Nuestra historia</p>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 400, color: "#e8e0d5", lineHeight: 1.2, marginBottom: "2rem" }}>
             Ropa que<br /><span style={{ fontStyle: "italic", color: "#b89a6a" }}>te define.</span>
@@ -318,7 +450,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CONTACTO ── */}
-      <section id="contacto" style={{ padding: "8rem 5%", background: "#0d0d0d", textAlign: "center" }}>
+      <section id="contacto" className="contacto-section" style={{ padding: "8rem 5%", background: "#0d0d0d", textAlign: "center" }}>
         <p style={{ fontSize: "0.65rem", letterSpacing: "0.4em", color: "#b89a6a", textTransform: "uppercase", marginBottom: "1rem" }}>Hablemos</p>
         <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 400, color: "#e8e0d5", marginBottom: "1rem" }}>
           Encontranos en
@@ -328,13 +460,13 @@ export default function HomePage() {
         </h2>
         <div style={{ width: "60px", height: "1px", background: "#b89a6a", margin: "0 auto 3rem" }} />
 
-        <div style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "4rem" }}>
+        <div className="contacto-cards" style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "4rem" }}>
           {[
             { label: "Instagram", handle: "@auracomplementos", icon: "◈" },
             { label: "WhatsApp", handle: "+54 9 000 000 0000", icon: "◉" },
             { label: "Email", handle: "hola@aura.com", icon: "◇" },
           ].map(({ label, handle, icon }) => (
-            <div key={label}
+            <div key={label} className="contacto-card"
               style={{ border: "1px solid #1a1a1a", padding: "2rem 2.5rem", minWidth: "200px", cursor: "pointer", transition: "all 0.3s ease", background: "#111" }}
               onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#b89a6a"; (e.currentTarget as HTMLDivElement).style.background = "#131108"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#1a1a1a"; (e.currentTarget as HTMLDivElement).style.background = "#111"; }}>
@@ -351,7 +483,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ borderTop: "1px solid #151515", padding: "2rem 5%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+      <footer className="footer" style={{ borderTop: "1px solid #151515", padding: "2rem 5%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
         <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "1rem", letterSpacing: "0.2em", color: "#2a2a2a" }}>AURA</span>
         <span style={{ fontSize: "0.6rem", letterSpacing: "0.15em", color: "#2a2a2a", textTransform: "uppercase" }}>Hecho con amor · {new Date().getFullYear()}</span>
       </footer>
