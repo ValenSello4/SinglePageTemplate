@@ -15,8 +15,6 @@ const navLinks = ["Inicio", "Colección", "Nosotras", "Contacto"];
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("Todos");
-  const [activeSection, setActiveSection] = useState("inicio");
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const filtered = activeCategory === "Todos"
     ? products
@@ -24,7 +22,6 @@ export default function HomePage() {
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
   };
 
   return (
@@ -255,7 +252,7 @@ export default function HomePage() {
 
         {/* Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
-          {filtered.map((product, i) => (
+          {filtered.map((product) => (
             <div key={product.id} className="card-hover"
               style={{ background: "#111", border: "1px solid #1a1a1a", cursor: "pointer", position: "relative", overflow: "hidden" }}>
               {/* Image area */}
